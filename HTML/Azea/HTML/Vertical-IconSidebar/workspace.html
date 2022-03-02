@@ -793,20 +793,20 @@
 						<!-- Row-2 -->
 						<div class="row">
 							<div class="col">
-								<button type="button" class="btn btn-danger btn-lg mb-1 h-130 w-100">Block level button</button>
+								<button onclick="buttonToggle(mybtn[0])" type="button" class="btn btn-danger btn-lg mb-1 h-130 w-100 mybtn">Block level button</button>
 							</div>
 							<div class="col">
-								<button type="button" class="btn btn-success btn-lg mb-1 h-130 w-100">Block level button</button>
+								<button onclick="buttonToggle(mybtn[1])" type="button" class="btn btn-success btn-lg mb-1 h-130 w-100 mybtn">Block level button</button>
 							</div>
 							
 						</div>
 						<br>
 						<div class="row">
 							<div class="col">
-								<button type="button" class="btn btn-danger btn-lg mb-1 h-130 w-100">Block level button</button>
+								<button onclick="buttonToggle(mybtn[2])" type="button" class="btn btn-danger btn-lg mb-1 h-130 w-100 mybtn">Block level button</button>
 							</div>
 							<div class="col">
-								<button type="button" class="btn btn-success btn-lg mb-1 h-130 w-100">Block level button</button>
+								<button onclick="buttonToggle(mybtn[3])" type="button" class="btn btn-success btn-lg mb-1 h-130 w-100 mybtn">Block level button</button>
 							</div>
 							
 							
@@ -814,10 +814,10 @@
 						<br>
 						<div class="row">
 							<div class="col">
-								<button type="button" class="btn btn-danger btn-lg mb-1 h-130 w-100">Block level button</button>
+								<button onclick="buttonToggle(mybtn[4])" type="button" class="btn btn-danger btn-lg mb-1 h-130 w-100 mybtn">Block level button</button>
 							</div>
 							<div class="col">
-								<button type="button" class="btn btn-success btn-lg mb-1 h-130 w-100">Block level button</button>
+								<button onclick="buttonToggle(mybtn[5])" type="button" class="btn btn-success btn-lg mb-1 h-130 w-100 mybtn">Block level button</button>
 							</div>
 							
 						</div>
@@ -908,4 +908,19 @@
 		<script src="../../assets/js/custom.js"></script>
 
 	</body>
+	<script>
+		const mybtn=document.getElementsByClassName('mybtn')
+		const buttonToggle=(btn)=>{
+			if(btn.className.split(' ').includes('btn-danger')){
+				btn.classList.remove('btn-danger')
+				btn.classList.add('btn-success')
+			}
+			else{
+				btn.classList.remove('btn-success')
+				btn.classList.add('btn-danger')
+			}
+		}
+		
+	</script>
 </html>
+
