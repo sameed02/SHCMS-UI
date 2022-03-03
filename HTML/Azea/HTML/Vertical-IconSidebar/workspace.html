@@ -73,7 +73,7 @@
 				<!--aside open-->
 				<aside class="app-sidebar">
 					<div class="app-sidebar__logo">
-						<a class="header-brand" href="workspace.html">
+						<a class="header-brand" href="index.html">
 							<img src="../../assets/images/brand/logo.png" class="header-brand-img desktop-lgo" alt="Azea logo">
 							<img src="../../assets/images/brand/logo1.png" class="header-brand-img dark-logo" alt="Azea logo">
 							<img src="../../assets/images/brand/favicon.png" class="header-brand-img mobile-logo" alt="Azea logo">
@@ -248,7 +248,8 @@
 											<div class="col-md-6 col-sm-6 col-6">
 												<div class="">
 													<h1 class="fs-1">Temperature</h1>
-													<h2 class="mb-2 mt-1 number-font carn2 font-weight-bold">100c</h2>
+													<h2 class="mb-2 mt-1 number-font carn2 font-weight-bold" id="temp">100c</h2>
+													
 													
 												</span></div>
 											</div>
@@ -268,7 +269,7 @@
 											<div class="col-md-6 col-sm-6 col-6">
 												<div class="text-justify">
 													<h1 class="fs-1">Humidity</h1>
-													<h2 class="mb-2 mt-1 number-font carn2 font-weight-bold">25%</h2>
+													<h2 class="mb-2 mt-1 number-font carn2 font-weight-bold" id="humid">25%</h2>
 													
 												</span></div>
 											</div>
@@ -294,7 +295,7 @@
 								<button onclick="buttonToggle(mybtn[0])" type="button" class="btn btn-danger btn-lg mb-1 h-130 w-100 mybtn">Block level button</button>
 							</div>
 							<div class="col">
-								<button onclick="buttonToggle(mybtn[1])" type="button" class="btn btn-success btn-lg mb-1 h-130 w-100 mybtn">Block level button</button>
+								<button onclick="buttonToggle(mybtn[1])" type="button" class="btn btn-danger btn-lg mb-1 h-130 w-100 mybtn">Block level button</button>
 							</div>
 							
 						</div>
@@ -304,7 +305,7 @@
 								<button onclick="buttonToggle(mybtn[2])" type="button" class="btn btn-danger btn-lg mb-1 h-130 w-100 mybtn">Block level button</button>
 							</div>
 							<div class="col">
-								<button onclick="buttonToggle(mybtn[3])" type="button" class="btn btn-success btn-lg mb-1 h-130 w-100 mybtn">Block level button</button>
+								<button onclick="buttonToggle(mybtn[3])" type="button" class="btn btn-danger btn-lg mb-1 h-130 w-100 mybtn">Block level button</button>
 							</div>
 							
 							
@@ -315,7 +316,7 @@
 								<button onclick="buttonToggle(mybtn[4])" type="button" class="btn btn-danger btn-lg mb-1 h-130 w-100 mybtn">Block level button</button>
 							</div>
 							<div class="col">
-								<button onclick="buttonToggle(mybtn[5])" type="button" class="btn btn-success btn-lg mb-1 h-130 w-100 mybtn">Block level button</button>
+								<button onclick="buttonToggle(mybtn[5])" type="button" class="btn btn-danger btn-lg mb-1 h-130 w-100 mybtn">Block level button</button>
 							</div>
 							
 						</div>
@@ -395,19 +396,80 @@
 		<script src="../../assets/js/custom.js"></script>
 
 	</body>
+	<script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
 	<script>
 		const mybtn=document.getElementsByClassName('mybtn')
+		const socket=io();
+		const tempele=document.getElementById('temp')
+		const humidele=document.getElementById('humid')
+		mybtn.forEach(btn => {
+			btn.status=false
+			
+		});
 		const buttonToggle=(btn)=>{
 			if(btn.className.split(' ').includes('btn-danger')){
 				btn.classList.remove('btn-danger')
 				btn.classList.add('btn-success')
+				btn.status=true
+				
 			}
 			else{
 				btn.classList.remove('btn-success')
 				btn.classList.add('btn-danger')
+				btn.status=false
 			}
+			const data={deviceId:846,status:[mybtn[0].status,mybtn[1].status,mybtn[2].status,mybtn[3].status,mybtn[4].status,mybtn[5].status]}
+			socket.emit('buttons',JSON.stringify(data))
 		}
+	const getTempHumid=()=>{
 		
+		socket.emit('getTempHumid','{"deviceId":846}')
+	}
+	const updatebutton=()=>{
+		socket.emit('getupdatebutton','{"deviceId":846}')
+	}
+		
+		
+		// socket.emit('getTempHumid','dsa')
+		socket.on('tempHumid',(data)=>{
+		
+        data=JSON.parse(data)
+		tempele.innerHTML=String(data.temp)+" °C"
+		humidele.innerHTML=String(data.humid)+"%"
+		console.log('updated')
+        })
+		socket.on('updatebutton',(data)=>{
+		
+        data=JSON.parse(data)
+		if(data.s0){mybtn[0].classList.remove('btn-danger')
+		mybtn[0].classList.add('btn-success')
+		mybtn[0].status=true}
+		if(data.s1){mybtn[1].classList.remove('btn-danger')
+		mybtn[1].classList.add('btn-success')
+		mybtn[1].status=true}
+		if(data.s2){mybtn[2].classList.remove('btn-danger')
+		mybtn[2].classList.add('btn-success')
+		mybtn[2].status=true}
+		if(data.s3){mybtn[3].classList.remove('btn-danger')
+		mybtn[3].classList.add('btn-success')
+		mybtn[3].status=true}
+		if(data.s4){mybtn[4].classList.remove('btn-danger')
+		mybtn[4].classList.add('btn-success')
+		mybtn[4].status=true}
+		if(data.s5){mybtn[5].classList.remove('btn-danger')
+		mybtn[5].classList.add('btn-success')
+		mybtn[5].status=true}
+		
+		
+        })
+		socket.on('ack',(data)=>{
+		
+        console.log(data)
+         })
+getTempHumid()
+updatebutton()
+		 setInterval(function () {getTempHumid()}, 2000);
+
 	</script>
 </html>
 
